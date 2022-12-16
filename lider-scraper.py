@@ -5,11 +5,11 @@ import telebot
 #
 # developed by jnsdevel00per
 #
-TOKEN = '5418029226:AAHI2-skJfI9l6vgUT2c_PaLOc3ek_LahDA'
+TOKEN = ''
 
 tb = telebot.TeleBot(TOKEN)
 # tb.send_message(chatid, message)
-tb.send_message(494683990, 'Test python')
+tb.send_message(, 'Test python')
 head = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36',
     'authority': 'buysmart-bff-production.lider.cl',
