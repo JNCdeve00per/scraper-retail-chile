@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-
+import telebot
 #
 # developed by jnsdevel00per
 #
+TOKEN = '5418029226:AAHI2-skJfI9l6vgUT2c_PaLOc3ek_LahDA'
 
+tb = telebot.TeleBot(TOKEN)
+# tb.send_message(chatid, message)
+tb.send_message(494683990, 'Test python')
 head = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36',
     'authority': 'buysmart-bff-production.lider.cl',
@@ -21,32 +25,41 @@ head = {
 }
 
 
-descuento=55
-precioFalla=1000
-categorias = ["Juguetería_y_entretención","Computación","Mundo_Bebé", "Tecno","Celulares","Electrohogar","Dormitorio","Muebles-","Decohogar","Deportes","Aire_libre","Automóvil-","Belleza_y_Cuidado_Personal","Climatización","Ferretería-","Librería_y_Cumpleaños","A3D"]
+descuento=50
+precioFalla=3000
+categorias = ["Computación","Mundo_Bebé", "Tecno","Celulares","Electrohogar","Dormitorio","Muebles-","Decohogar","Deportes","Aire_libre","Automóvil-","Belleza_y_Cuidado_Personal","Climatización","Ferretería-","Librería_y_Cumpleaños","A3D"]
 
-url = 'https://buysmart-bff-production.lider.cl/buysmart-bff/category'
+#url = 'https://buysmart-bff-production.lider.cl/buysmart-bff/category'
+url = 'https://apps.lider.cl/catalogo/bff/category'
+
 
 for categoria in categorias:
     
     ploads = {'categories':categoria,'page':1,'facets':[],'sortBy':'','hitsPerPage':700}
     r1=requests.post(url,headers=head,json=ploads)
-    data = r1.json()
-    Qproductos=data["nbHits"]
-    ploads2 = {'categories':categoria,'page':1,'facets':[],'sortBy':'','hitsPerPage':Qproductos}
-    r1=requests.post(url,headers=head,json=ploads)
-    data = r1.json()
-    #print (data)
-    for producto in data["products"]:
-        if producto["discount"] > descuento :
-            print("Producto con "+str(producto["discount"]) +"%  de descuento : "+producto["displayName"])
-        if producto["price"] ["BasePriceSales"]< precioFalla :
-            print("Posible oferta con "+str(producto["price"] ["BasePriceSales"]) +"  precio : "+producto["displayName"])
+    #print(f"Status Code: {r1.status_code}, Response: {r1.json()}")
+    try:
+        data = r1.json()
+
+        Qproductos=data["nbHits"]
+
+
+        for producto in data["products"]:
+            if producto["discount"] > descuento :
+                #print("Producto con "+str(producto["discount"]) +"%  de descuento : "+producto["displayName"])
+                tb.send_message(494683990, "Producto con "+str(producto["discount"]) +"%  de descuento : "+producto["displayName"])
+            if producto["price"] ["BasePriceSales"]< precioFalla :
+                print("Posible oferta con "+str(producto["price"] ["BasePriceSales"]) +"  precio : "+producto["displayName"])
+            dif=producto["price"] ["BasePriceReference"]-producto["price"] ["BasePriceSales"]
+            difPercent=(dif*100)/producto["price"] ["BasePriceReference"]
+            if difPercent > descuento :
+                print("Producto con "+str(difPercent) +"%  de diferencia : "+producto["displayName"])
+    
+    except Exception as ex:
+        pass
         
-        dif=producto["price"] ["BasePriceReference"]-producto["price"] ["BasePriceSales"]
-        difPercent=(dif*100)/producto["price"] ["BasePriceReference"]
-        if difPercent > descuento :
-            print("Producto con "+str(difPercent) +"%  de diferencia : "+producto["displayName"])
+        
+
        
         
       
